@@ -1,0 +1,93 @@
+---
+title: "Lab 1: Intro to R"
+author: "Sanielle Worrell"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+library(ggplot2)
+```
+
+```{r}
+data('arbuthnot', package='openintro')
+```
+
+### Exercise 1
+
+```{r view-girls-counts}
+arbuthnot$girls
+```
+
+### Exercise 2
+Data shows that overall, baptism of girls were on the increase from 1629 through 1700, except for a rapid decline from 1640 through 1650. 
+
+```{r trend-girls}
+library(ggplot2)
+ggplot(arbuthnot, aes(x = year, y = girls)) + geom_point(color='blue')
+```
+
+
+### Exercise 3
+
+Create a new variable of boys plus girls
+```{r}
+arbuthnot$total <- arbuthnot$girls + arbuthnot$boys
+```
+
+Plot of boys baptized over total shows that boys accounted for over 50% of baptisms throughout the years. 
+```{r plot-prop-boys-arbuthnot}
+ggplot(arbuthnot, aes((x = year), y = boys / total, xlab = "Year", ylab = "Proportion of Boys Born over girls")) + geom_point(color='red') +  ylim(.5,.6)
+```
+
+### Exercise 4
+
+bring dataset into R
+```{r}
+data('present', package='openintro')
+```
+Years included in dataset 
+```{r}
+factor(present$year)
+```
+Dimensions of the dataframe
+```{r}
+dim(present)
+```
+ Column name/variables of the dataset
+```{r}
+names(present)
+```
+### Exercise 5
+
+Comparison of Arbuthnot data to Present shows that overall the % of boys baptized compared to boys born was low.  For example, the maximum number boys baptized is 8,426 for Arbuthnot data of total boys born 2,186,274 in the present data.
+
+```{r}
+summary(arbuthnot)
+```
+
+```{r}
+summary(present)
+```
+### Exercise 6
+
+Create a new variable of boys plus girls
+```{r}
+present$total <- present$girls + present$boys
+```
+
+Plot of the proportion of boys over the total shows that boys accounted for over 51% of births but the number of boys born compared to girls is decreasing over the years from 1980. 
+
+```{r plot-prop-boys-present}
+ggplot(present, aes((x = year), y = boys / total, xlab = "Year", ylab = "Proportion of Boys Born over girls")) + geom_point(color='red') +  ylim(.5,.6) 
+```
+
+### Exercise 7
+
+Maximum number of births
+
+```{r find-max-total}
+max(present$total)
+```
