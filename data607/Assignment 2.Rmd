@@ -1,0 +1,64 @@
+---
+title: "Data 607 - Assignment 2"
+author: "Sanielle Worrell"
+date: "2022-09-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###Assignment - SQL and R
+
+Choose six recent popular movies. Ask at least five people that you know (friends, family, classmates, imaginary friends if necessary) to rate each of these movies that they have seen on a scale of 1 to 5. Take the results (observations) and store them in a SQL database of your choosing. Load the information from the SQL database into an R dataframe
+
+To accomplish the task I created a google form to survey from friends. The data was then saved into an SQL database and uploaded to Github. Link to form and SQL database can be found below
+
+Google form: <https://forms.gle/WjzhDYER7FgqBwFC6>
+
+SQL Database: <https://github.com/saniewor/MSDS/blob/main/movieratings_movieratings.sql>
+
+#Set up SQL database and connection
+
+A connection was created with the MySQL Database on my local computer to show available tables.
+
+Connecting the SQL database to R via package RMySQL
+
+```{r}
+library(RMySQL) 
+```
+
+#Creating connection to local computer.
+
+Password kept blank. Only one table was created
+
+```{r}
+con <- dbConnect(RMySQL::MySQL(), dbname = "movieratings", user = "root", password = , host = "localhost")
+dbListTables(con) 
+```
+
+Creating query from SQL table and creating dataframe with data
+
+```{r}
+df.movieratings <- "SELECT * FROM movieratings;" 
+df.movieratings <- dbGetQuery(con, df.movieratings) 
+```
+
+Column names in data
+
+```{r}
+colnames(df.movieratings)
+```
+
+Average rating by scorer, removing N/A values
+
+```{r}
+df.movieratings$movieMean <- rowMeans(df.movieratings[,2:7], na.rm = TRUE)
+```
+
+Average rating of all movie, removing N/A values
+
+```{r}
+colMeans(df.movieratings[sapply(df.movieratings, is.numeric)])
+```
