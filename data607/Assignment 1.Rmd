@@ -1,0 +1,58 @@
+---
+title: "Assigment 1"
+author: "Sanielle Worrell"
+date: "2022-09-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(tidyr)
+library(dplyr)
+```
+
+
+## R Markdown
+
+Reading file from github
+
+```{r}
+TheBigLie<-read.csv('https://raw.githubusercontent.com/saniewor/MSDS/main/datasets/TheBigLie')
+```
+
+Overview
+
+Article discussed that most pof the new voter restriction bills were enacted based on "the Big Lie" which is based on the belief by Republican voters that voter fraud occurred in the 2020 election. Data showed that Republians proposed 501 bills out of 579 with Texas proposing 104 bills.
+
+Link to article
+https://fivethirtyeight.com/features/the-big-lie-voting-laws/
+
+
+
+I wanted to analyze if the most of the bills were suggested by Democrats or Rebublicans and the number of bills proposed by state that proposed the bill
+
+-   Party (D or R?)
+-   State
+
+#Check to see column names in data
+```{r}
+colnames(TheBigLie)
+```
+#Check to see number of bills by party
+```{r}
+df = TheBigLie
+table(df$Introducing.Party)
+```
+
+#Number of Bills proposed by State
+```{r}
+No.ofBills <-TheBigLie %>% dplyr::count(TheBigLie$State, TheBigLie$Introducing.Party)
+```
+
+Change name of columns
+```{r}
+No.ofBills <- setNames(No.ofBills, c("State","Party","CountofBill"))
+```
+
