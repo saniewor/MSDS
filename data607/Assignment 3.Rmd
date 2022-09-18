@@ -1,0 +1,85 @@
+---
+title: "Assignment 3"
+author: "Sanielle Worrell"
+date: "2022-09-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+```
+
+## R Markdown
+
+#Loading data from website
+
+```{r}
+college_maj<-read.csv('https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/majors-list.csv')
+```
+
+#1. Using the 173 majors listed in fivethirtyeight.com's College Majors dataset [<https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/>], provide code that identifies the majors that contain either "DATA" or "STATISTICS"
+
+```{r}
+grep(pattern = 'DATA|STATISTICS', college_maj$Major, value = TRUE, ignore.case = TRUE)
+```
+
+#2. Write code that transforms the data below:
+
+[1] "bell pepper" "bilberry" "blackberry" "blood orange" [5] "blueberry" "cantaloupe" "chili pepper" "cloudberry"\
+[9] "elderberry" "lime" "lychee" "mulberry"\
+[13] "olive" "salal berry"
+
+Into a format like this: c("bell pepper", "bilberry", "blackberry", "blood orange", "blueberry", "cantaloupe", "chili pepper", "cloudberry", "elderberry", "lime", "lychee", "mulberry", "olive", "salal berry")
+
+Create a vector of data
+
+```{r}
+fruits <- c("bell pepper","bilberry", "blackberry","blood orange","blueberry","cantaloupe", "chili pepper", "cloudberry",  "elderberry", "lime", "lychee" , "mulberry" , "olive", "salal berry")
+fruits
+```
+
+Converting code to required format
+```{r}
+cat(paste0("c(",paste0(sep = '"',fruits, collapse = ', ', sep='"'),paste(")")))
+```
+
+#3 Describe, in words, what these expressions will match:
+
+-   (.)\\1\\1
+-   "(.)(.)\\\\2\\\\1"
+-   (..)\\1
+-   "(.).\\\\1.\\\\1"
+-   "(.)(.)(.).\*\\\\3\\\\2\\\\1"
+
+Answer:
+
+-   (.)\\1\\1 - Any two characters that repeats in the reverse order.
+-   "(.)(.)\\\\2\\\\1" - Any two characters that repeats in the same order.
+-   "(.).\\1.\\1" - Any single character that repeats two more times, with each repetition after another single variable character.
+-   "(.)(.)(.).\*\\3\\2\\1" - Any three characters that repeat in the reverse order after any number of variable characters.
+
+#4 Construct regular expressions to match words that: Start and end with the same character. Contain a repeated pair of letters (e.g. "church" contains "ch" repeated twice.) Contain one letter repeated in at least three places (e.g. "eleven" contains three "e"s.)
+
+-   Start and end with the same character.
+-   Contain a repeated pair of letters (e.g. "church" contains "ch" repeated twice.)
+-   Contain one letter repeated in at least three places (e.g. "eleven" contains three "e"s.)
+
+Answer
+
+```{r}
+df.names <-c("anna", "church", "bob", "harry","paul", "eleven", "bubble")
+regex_expr ="^(.)((.*\\1$)|\\1?$)"
+str_subset(df.names,regex_expr) #keeping string matching pattern
+```
+
+```{r}
+regex_expr2 = "([A-Za-z][A-Za-z]).*\\1"
+str_subset(df.names,regex_expr2)
+```
+
+```{r}
+regex_expr3 = "([A-Za-z]).*\\1.*\\1"
+str_subset(df.names,regex_expr3 )
+```
