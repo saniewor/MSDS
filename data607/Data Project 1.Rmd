@@ -1,0 +1,140 @@
+---
+title: "Project 1"
+author: "Sanielle Worrell"
+date: "2022-09-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyr)
+library(tidyverse)
+
+```
+
+## R Markdown
+
+In this project, you’re given a text file with chess tournament results where the information has some structure. Your job is to create an R Markdown file that generates a .CSV file (that could for example be imported into a SQL database) with the following information for all of the players:
+
+1. Player’s Name, 
+2. Player’s State, 
+3. Total Number of Points, 
+4. Player’s Pre-Rating, 
+5. and Average Pre Chess Rating of Opponents
+
+Bringing in Chess data from Github
+```{r}
+Chessdata<-read.delim('https://raw.githubusercontent.com/saniewor/MSDS/main/datasets/Chessdata')
+```
+
+Removing lines with dashes by deleting every third row starting from 0
+```{r}
+dfChess = Chessdata %>% filter(row_number() %% 3 != 0) 
+```
+Renaming column
+```{r}
+names(dfChess)[1] <- "Chess1"
+```
+Selecting rows with names
+```{r}
+Dfnames = dfChess %>% filter(row_number() %% 2 == 1) ## Select every 2nd row starting from first row
+```
+Select rows with States
+```{r}
+Dfstates = dfChess %>% filter(row_number() %% 2 == 0) ## Select every 2nd row starting from zero
+```
+Split Dataframe with names (Dfnames) in column in separate columns using a delimiter
+```{r}
+df.Chess2 <- read.table(col.names = unlist(strsplit(Dfnames[1,], 
+                                                      split = "[|]")),
+                          sep = "|",
+                          skip = 1, # since the headers were in row 1
+                          text = unlist(Dfnames,use.names = F))
+```
+Split column in separate columns using a delimiter
+```{r}
+df.Chess3 <- read.table(col.names = unlist(strsplit(Dfstates[1,], 
+                                                      split = "[|]")),
+                          sep = "|",
+                          skip = 1, # since the headers were in row 1
+                          text = unlist(Dfstates, use.names = F))
+```
+
+Rename Columns in Chess 2
+```{r}
+df.Chess2 <- setNames(df.Chess2, c("Number","Playername","Totalpoints", "Rd1", "Rd2", "Rd3", "Rd4", "Rd5", "Rd6", "Rd7"))
+```
+Rename columns in Chess 3
+```{r}
+df.Chess3 <- setNames(df.Chess3, c("State","USCF ID / Rtg (Pre->Post)","No.of_games", "Rd1", "Rd2", "Rd3", "Rd4", "Rd5", "Rd6", "Rd7", "Number"))
+```
+Add numbers to "Number" column from blanks 
+```{r}
+df.Chess3$Number <- paste0(" ",1:64)
+df.Chess3$Number <- as.numeric(df.Chess3$Number)
+```
+Separate USCF ID column into separate columns and create new dataframe with updated columns
+```{r}
+df.Chess4 <-separate(data =  df.Chess3, col = "USCF ID / Rtg (Pre->Post)", into = c("blank","USCF ID","R",  "PreRating", "PostRating"))
+```
+
+
+Merging dataframes
+```{r}
+df.Chessmerge<-merge(df.Chess2,df.Chess4,by.x = "Number",by.y = "Number",all=T)
+```
+Rearrange columns in dataframe and create cleaner dataframe
+```{r}
+df.Chessmerge2 = df.Chessmerge[,c(1,2,12,3,16, 4:10)] 
+```
+Cleaning the ratings to make them numeric
+```{r}
+df.Chessmerge2$PreRating <- str_extract(df.Chessmerge2$PreRating, "\\d+\\d")
+```
+
+Assigning the round columns its own variable
+```{r}
+rounds <- df.Chessmerge[4:10]
+```
+extracting the digits from the round columns, putting and putting it in a matrix
+```{r}
+test <- matrix(str_extract(unlist(rounds), "\\d+"), ncol = 7)
+```
+Creating a loop and replacing data with preratings of opponents by number
+```{r}
+for (row in 1:nrow(test))
+{
+  for (col in 1:ncol(test))
+  {
+    i <- test[row, col]
+    
+    if(!is.na(i))
+    {
+      test[row, col] <- df.Chessmerge2$`PreRating`[df.Chessmerge2$Number == i]
+    }
+  }
+}
+```
+Changing the matrix to numeric
+```{r}
+class(test) <- "numeric"
+```
+assigning the rounds data into the dataframe
+```{r}
+rounds <- test
+```
+Calculating opponents average pre-rating, N/A values were removed
+```{r}
+df.Chessmerge2$Average_Opp_ratings <- round(rowMeans(rounds, na.rm = TRUE))
+```
+Cleaning file up to remove excess columns and generating output file
+```{r}
+df.Chesscleandata = df.Chessmerge2[,c(1:5, 13)] 
+```
+Ouput to csv
+```{r}
+write.csv(df.Chesscleandata, file ='Chesscleandata.csv', row.names = FALSE)
+```
