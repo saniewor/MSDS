@@ -1,5 +1,4 @@
-{
- "Favorite Books":[
+{"Favorite books":[
   {
    "Author": "Stephen King",
    "Title": "Christine",
@@ -18,5 +17,4 @@
    "Number of pages": "307",
    "Initial Published date": "1/13/1996"
    }
-   ]
-   }
+]}
