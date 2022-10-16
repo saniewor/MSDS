@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<favbooks>
+<book>
+		<Author>Stephen King</Author>
+		<Title>Christine</Title>
+		<Number_of_pages>658</Number_of_pages>
+		<Initial_Published_date>3/4/2003</Initial_Published_date>
+</book>
+<book>
+			<Author>Sophie Kinsella</Author>
+			<Title>Confessions of a Shopaholic</Title>
+			<Number_of_pages>384</Number_of_pages>
+			<Initial_Published_date>3/4/2003</Initial_Published_date>
+</book>
+<book>
+			<Author>Dean Koontz</Author>
+			<Title>Intensity: A Novel</Title>
+			<Number_of_pages>307</Number_of_pages>
+			<Initial_Published_date>1/13/1996</Initial_Published_date>
+</book>
+</favbooks>
