@@ -1,15 +1,22 @@
 {
- "Favorite Books": [
-  {"Author": "Stephen King",
+ "Favorite Books":[
+  {
+   "Author": "Stephen King",
    "Title": "Christine",
    "Number of pages": "658",
-   "Initial Published date": "4/29/1983"},
-  {"Author": "Sophie Kinsella",
+   "Initial Published date": "4/29/1983"
+  },
+  {
+   "Author": "Sophie Kinsella",
    "Title": "Confessions of a Shopaholic",
    "Number of pages": "384",
-   "Initial Published date": "3/4/2003"},
-  {"Author": "Dean Koontz",
+   "Initial Published date": "3/4/2003"
+   },
+  {
+   "Author": "Dean Koontz",
    "Title": "Intensity: A Novel",
    "Number of pages": "307",
-   "Initial Published date": "1/13/1996"}
-   ]}
+   "Initial Published date": "1/13/1996"
+   }
+   ]
+   }
