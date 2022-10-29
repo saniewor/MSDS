@@ -1,0 +1,68 @@
+---
+title: "Assignment – Web APIs"
+author: "Sanielle Worrell"
+date: "2022-10-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Assignment: 
+
+The New York Times web site provides a rich set of APIs, as described here: https://developer.nytimes.com/apis
+You’ll need to start by signing up for an API key.
+
+Your task is to choose one of the New York Times APIs, construct an interface in R to read in the JSON data, and
+transform it into an R DataFrame.
+
+```{r}
+library(httr)
+library(jsonlite)
+library(tidyverse)
+library(DT)
+```
+
+
+#### Get API from NY TIMES
+
+I chosed the most popular emailed articles for the last seven (7) days
+```{r}
+mostemailed <- GET("https://api.nytimes.com/svc/mostpopular/v2/emailed/7.json?api-key=hG32gJN3SEk25FI2UmQkI7yBGUr6wLKH")
+```
+
+#### Convert to text file
+```{r}
+mostemailed <- content(mostemailed, as = "text")
+```
+#### Convert to dataframe
+```{r}
+df.mostemailed <- mostemailed %>% 
+  fromJSON() %>% 
+  as.data.frame()
+```
+
+#### Get column names
+```{r}
+colnames(df.mostemailed)
+```
+
+#### Remove certain characters in column names
+Remove "." in column names
+
+```{r}
+colnames(df.mostemailed) <- gsub("[.]","_",colnames(df.mostemailed))
+```
+
+#### Select useful columns
+```{r}
+df_popart <- df.mostemailed %>% 
+select(results_url, results_source, results_published_date, results_section, results_byline, results_title, results_abstract)
+```
+#### Rename column names
+```{r}
+df_popart <- df_popart %>%
+rename("Url" = 1, "Source" = 2, "Published_date" = 3, "Section" = 4, "Author" = 5, "Title" = 6, "Summary" = 7)
+datatable(df_popart, options=list(
+       pageLength = 3))
+```
