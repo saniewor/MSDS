@@ -1,0 +1,105 @@
+---
+title: "Assignment - Sentimental Analysis"
+author: "Sanielle Worrell"
+date: "2022-11-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Assignment:
+
+In Text Mining with R, Chapter 2 looks at Sentiment Analysis. In this assignment, you should start by getting the primary example code from chapter 2 working in an R Markdown document. You should provide a citation to this base code. You're then asked to extend the code in two ways:
+
+-   Work with a different corpus of your choosing, and
+
+-   Incorporate at least one additional sentiment lexicon (possibly from another R package that you've found through research).
+
+
+# Analysis
+
+New Corpus - I chose to analyse Moby Dick, a familar tale that is known to everyone.  Code is attributed to: https://www.tidytextmining.com/sentiment.html
+
+
+```{r}
+# Load libraries
+library(gutenbergr)
+library(tidytext)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(wordcloud)
+```
+
+```{r}
+# Filter for Moby Dick
+gutenberg_works() %>%
+  filter(title == "Moby Dick")
+```
+
+```{r}
+# Downloading title
+moby_dick <- gutenberg_download(c(15),  meta_fields = "title")
+```
+
+
+```{r}
+# Convert data using Tidy
+moby_dick_chapters <- moby_dick %>%
+  mutate(linenumber = row_number(),
+    chapter = cumsum(str_detect(text, 
+                                regex("^chapter [\\divxlc]", 
+                                      ignore_case = TRUE)))) %>%
+  ungroup() %>%
+  unnest_tokens(word, text)
+```
+
+Sentimental analysis performed NRC - The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive). I chosed to view all sentiments as part of this package.
+
+
+```{r}
+get_sentiments("nrc")
+```
+
+```{r}
+nrc_sentiments <- get_sentiments("nrc")
+moby_dick_sentiments <-  moby_dick_chapters %>% 
+  inner_join(nrc_sentiments) %>%
+  count(word, sentiment, sort = TRUE)
+```
+
+
+```{r}
+# Plot by sentiment
+ggplot(moby_dick_sentiments)+geom_bar(aes(x= sentiment, fill=sentiment))+geom_label(aes(x= sentiment, label=..count..),
+            stat='count')+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle=45, vjust=1, hjust = 1))
+```
+
+
+
+```{r}
+# Contribution to sentiment
+moby_dick_sentiments %>%
+  group_by(sentiment) %>%
+  slice_max(n, n = 10) %>% 
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sentiment, scales = "free_y") +
+  labs(x = "Contribution to sentiment",
+       y = NULL)
+```
+```{r}
+moby_dick_sentiments %>%
+  anti_join(stop_words) %>%
+  count(word) %>%
+  with(wordcloud(word, n, max.words = 100, scale=c(1,.0005))) 
+```
+
+# Conclusion
+Moby Dick has a higher count of words associated with fear next driven suprisingly by trust. The book is mostly filled with sadness. 
