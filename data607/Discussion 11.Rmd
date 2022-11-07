@@ -1,0 +1,48 @@
+---
+title: "Discussion 11"
+author: "Sanielle Worrell"
+date: "2022-11-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Your task is to analyze an existing recommender system that you find interesting.
+
+You should:
+
+1.  Perform a Scenario Design analysis as described below. Consider whether it makes sense for your selected recommender system to perform scenario design twice, once for the organization (e.g. Amazon.com) and once for the organization's customers.
+
+2.  Attempt to reverse engineer what you can about the site, from the site interface and any available information that you can find on the Internet or elsewhere.
+
+3.   Include specific recommendations about how to improve the site's recommendation capabilities going forward.
+
+4.  Create your report using an R Markdown file, and create a discussion thread with a link to the GitHub repo where your Markdown file notebook resides. You are not expected to need to write code for this discussion assignment.
+
+
+#### Perform a Scenario Design analysis as described below.
+Website: Audible.com, Audible is an online audiobook and podcast service that allows users to purchase books and stream audiobooks under a subscription model where the user receives "credits" that can be redeemed for content monthly. Users can stream books via their app or website. 
+
+1.  Who are your target users
+
+    The target users of audibles is people that are interested in purchasing audio books online to listen.
+
+2.  What are their key goals
+
+    The key goals is to get people to sign up for a membership plan that includes the purchase of credits that can then be used to download books. The memberships are based on different tiers/credits. Audible also recommends books based on your prior purchase history.
+
+3.  How can you help them improve their goals
+
+    Audible can improve by making the app/website more interactive to get people to read faster such as doing goal challenges for finishing a book or even offering free credits to customers that acheive certain targets.
+
+#### Attempt to reverse engineer what you can about the site, from the site interface and any available information that you can find on the Internet or elsewhere.
+
+Since audible is linked to amazon which is also used to download library books, audible can improve by connecting to data from books bought through kindle or borrowed from the library to make better suggestions. Most of the suggestions that they recommend are based on prior search history and barely related to genres that I tend to enjoy.
+
+    
+#### Include specific recommendations about how to improve the site's recommendation capabilities going forward.
+
+Their library recommendation function can be improved as it is not very intuitive, for eg, when searching for a book it will show a high percentage of books of other unknown authors, that you may also enjoy, instead of books related to that specific author first. 
+
